@@ -3,6 +3,41 @@ from tkinter import messagebox
 import sqlite3
 current_account = None
 
+# DATABASE INITIALIZATION
+
+def initialize_database():
+
+    conn = sqlite3.connect("bank.db")
+    cursor = conn.cursor()
+
+    # Create Accounts Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS accounts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            phone TEXT UNIQUE NOT NULL,
+            pin TEXT NOT NULL,
+            balance INTEGER DEFAULT 0
+        )
+    """)
+
+    # Create Transactions Table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS transactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            phone TEXT NOT NULL,
+            type TEXT NOT NULL,
+            amount INTEGER NOT NULL,
+            date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+initialize_database()
+
 def show_balance():
     global current_account
 
